@@ -14,6 +14,20 @@ npm install -g @anthropic-ai/claude-code
 
 You'll need an Anthropic API key or a Claude Pro/Team subscription. See the [Claude Code docs](https://docs.anthropic.com/en/docs/claude-code) for details.
 
+### GitHub Copilot CLI
+
+Install Copilot CLI using the [GitHub Copilot CLI setup guide](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli),
+then start it from the repository root:
+
+```bash
+copilot
+```
+
+Copilot CLI automatically loads `AGENTS.md` and `.github/copilot-instructions.md`.
+It supports both natural-language requests (for example, “set up my profile”)
+and the canonical slash commands. The instructions remain under `.claude/`;
+do not maintain a second copy.
+
 ### Python
 
 Python 3.10+ is required for the salary lookup tool. Check with:
@@ -166,9 +180,9 @@ If a command still uses `pdftotext -layout`, it must pass `-enc UTF-8` as well. 
 ## 2. Fork and clone
 
 ```bash
-gh repo fork MadsLorentzen/ai-job-search --clone
-cd ai-job-search
-gh repo set-default <your-github-username>/ai-job-search
+gh repo fork arohao/ai-job-search-copilot --clone
+cd ai-job-search-copilot
+gh repo set-default <your-github-username>/ai-job-search-copilot
 ```
 
 Or manually: fork on GitHub, then clone your fork.
@@ -182,7 +196,7 @@ Or manually: fork on GitHub, then clone your fork.
 > under your GitHub identity, on a repo where you cannot delete it (#389).
 
 > **Before you go further: forks are public.** GitHub cannot make a fork of a public
-> repository private, and `/setup` (section 6) writes your personal data into **tracked**
+> repository private, and `/setup` (section 4) writes your personal data into **tracked**
 > files — pushing those commits to a fork publishes them. If this copy is for your own
 > job search rather than for contributing, prefer a **private repository** with this repo
 > as `upstream`: see section 8, step 1 for the exact commands and why committing your
@@ -200,26 +214,30 @@ It runs `bun install` in every portal CLI under `.agents/skills/*/cli/` - discov
 
 For `linkedin-search` and `freehire-search` the install is optional: both have zero runtime dependencies and run with plain `bun`; `bun install` only pulls TypeScript dev types.
 
-If you're outside Denmark, you can generate an equivalent search skill for your local job board with `/add-portal` — it scaffolds the same CLI structure for any public portal and test-runs a live query before registering. See the "Job search tools" section in the README.
+If you're outside Denmark, you can generate an equivalent search skill for your local job board with `/add-portal` — it scaffolds the same CLI structure for any public portal and test-runs a live query before registering.
 
 ## 4. Run the setup interview
 
-Start Claude Code in the repository:
+Start Copilot CLI or Claude Code in the repository:
 
 ```bash
+# Copilot CLI
+copilot
+
+# Claude Code
 claude
 ```
 
-Then run the onboarding:
+Then run the onboarding with either tool:
 
 ```
 /setup
 ```
 
-Claude will offer three paths:
+The assistant will offer three paths:
 
-- **Path A (documents folder):** Add your CV, LinkedIn export, diplomas, references, or past applications under `documents/`. Claude reads and cross-references them before proposing profile updates. This is best when you have several source files.
-- **Path B (single CV import):** Share one CV/resume by mentioning the file with `@` or pasting the text. Claude extracts it and asks follow-up questions for anything missing.
+- **Path A (documents folder):** Add your CV, LinkedIn export, diplomas, references, or past applications under `documents/`. The assistant reads and cross-references them before proposing profile updates. This is best when you have several source files.
+- **Path B (single CV import):** Share one CV/resume by mentioning the file with `@` or pasting the text. The assistant extracts it and asks follow-up questions for anything missing.
 - **Path C (interview mode):** Answer structured interview questions section by section.
 
 All three paths produce the same result: fully populated profile files.
@@ -276,7 +294,7 @@ Or paste the job description directly:
 /apply [paste job posting text here]
 ```
 
-Claude will:
+The assistant will:
 1. Evaluate the fit against your profile
 2. Ask if you want to proceed
 3. Draft a tailored CV and cover letter
@@ -299,7 +317,7 @@ Set-Location cv; lualatex main_<company>_<role>.tex; Set-Location ..
 Set-Location cover_letters; xelatex cover_<company>_<role>.tex; Set-Location ..
 ```
 
-These commands apply to the stock templates (moderncv CV, `cover.cls` cover letter). If you'd rather use your own LaTeX template, run `/add-template` — it captures the template's compile engine, fonts, style rules, and page limit, test-compiles it, and wires it into `/apply`. See the "LaTeX templates" section in the README.
+These commands apply to the stock templates (moderncv CV, `cover.cls` cover letter). If you'd rather use your own LaTeX template, run `/add-template` — it captures the template's compile engine, fonts, style rules, and page limit, test-compiles it, and wires it into `/apply`.
 
 ## 8. Pulling upstream updates into your fork
 
